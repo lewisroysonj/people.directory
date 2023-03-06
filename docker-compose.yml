@@ -1,0 +1,52 @@
+version: "3.9"
+
+services:
+  # frontend:
+  #   build:
+  #     context: frontend
+  #     dockerfile: dockerfile.dev
+  #   ports:
+  #     - "5000:5000"
+  #     - "5001:5001"
+  #   volumes:
+  #     - ./frontend:/service
+  #   networks:
+  #     - public
+  #   depends_on:
+  #     - backend
+
+  backend:
+    build:
+      context: backend
+      dockerfile: dockerfile.dev
+    ports:
+      - "8000:8000"
+    container_name: portfolio_backend
+    volumes:
+      - ./backend:/service
+    networks:
+      - public
+      - private
+    depends_on:
+      - mysql
+
+  mysql:
+    image: mysql:8.0.27
+    restart: always
+    volumes:
+      - db-data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    networks:
+      - private
+    environment:
+      MYSQL_ROOT_PASSWORD: rl01111998
+      MYSQL_DATABASE: database
+
+networks:
+  public:
+  private:
+
+volumes:
+  back-notused:
+  db-data:
