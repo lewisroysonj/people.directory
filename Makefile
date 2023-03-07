@@ -49,6 +49,10 @@ build: down timeout
 	docker-compose up -d --remove-orphans
 	make down
 
+package-all:
+	make package-frontend
+	make package-backend
+	
 package-frontend:
 	docker-compose -f docker-compose.yml exec -T frontend sh -c \
 	"yarn install"
