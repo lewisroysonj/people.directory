@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Person } from 'src/entities/person.entity';
+import { ContactInfo, Person } from 'src/entities/person.entity';
 import * as bcrypt from 'bcrypt';
 import { PersonRepository } from 'src/repositories/person/person.repository';
 import { DeleteResult, UpdateResult } from 'typeorm';
@@ -13,7 +13,8 @@ export class PersonService {
   }
 
   async get(id: number): Promise<Person> {
-    return this.personRepository.get(id);
+    const person = await this.personRepository.get(id);
+    return person;
   }
 
   async create(data: Partial<Person>): Promise<Person> {
@@ -25,15 +26,21 @@ export class PersonService {
     return person;
   }
 
+  async addContact(
+    data: Partial<ContactInfo>,
+    personId: number,
+  ): Promise<ContactInfo> {
+    const contact = await this.personRepository.addContact(data, personId);
+    return contact;
+  }
+
   async update(id: number, data: Partial<Person>): Promise<Person> {
     const updatedPerson = await this.personRepository.update(id, data);
-    delete updatedPerson.password;
     return updatedPerson;
   }
 
   async delete(id: number): Promise<Person> {
     const deletedPerson = await this.personRepository.delete(id);
-    delete deletedPerson.password;
     return deletedPerson;
   }
 

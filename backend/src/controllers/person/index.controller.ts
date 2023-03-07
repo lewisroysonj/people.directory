@@ -12,7 +12,7 @@ import {
   Query,
   UseInterceptors,
 } from '@nestjs/common';
-import { PersonDTO, PersonUpdateDTO } from 'src/dto/person.dto';
+import { ContactInfoDTO, PersonDTO, PersonUpdateDTO } from 'src/dto/person.dto';
 import handleSuccessResponse from 'src/helper/response/handle-success';
 import { LoggingInterceptor } from 'src/interceptors/logging/logging.interceptor';
 import { PersonService } from 'src/services/person/person.service';
@@ -63,6 +63,26 @@ export class PersonController {
     } else {
       throw new HttpException(
         'Failed to create new person!',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+  }
+
+  // POST /people/{id}/contact
+  @Post(':id/contact')
+  async addContact(
+    @Body() contact: ContactInfoDTO,
+    @Param('id', ParseIntPipe) personId: number,
+  ) {
+    const newContact = await this.personService.addContact(contact, personId);
+    if (newContact) {
+      return handleSuccessResponse(
+        newContact,
+        'New Contact added successfully',
+      );
+    } else {
+      throw new HttpException(
+        'Failed to create new contact!',
         HttpStatus.BAD_REQUEST,
       );
     }
@@ -142,7 +162,7 @@ export class PersonController {
     }
 
     const deletedPerson = await this.personService.delete(id);
-    if (deletedPerson.id) {
+    if (deletedPerson?.id) {
       return handleSuccessResponse(
         deletedPerson,
         'Person deleted successfully',

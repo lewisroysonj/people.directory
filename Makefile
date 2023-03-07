@@ -1,9 +1,9 @@
 default: env up
 
 env:
-	# rm -rf ./frontend/.env > /dev/null 2>&1
+	rm -rf ./frontend/.env > /dev/null 2>&1
 	rm -rf ./backend/.env > /dev/null 2>&1
-	# cp ./frontend/src/config/parameters/local.env ./frontend/.env
+	cp ./frontend/src/config/parameters/local.env ./frontend/.env
 	cp ./backend/src/config/parameters/local.env ./backend/.env
 
 up: env down

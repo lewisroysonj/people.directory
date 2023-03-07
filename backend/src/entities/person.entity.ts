@@ -33,7 +33,7 @@ export class Person implements IPerson {
   })
   contactInfo: Array<IContactInfo>;
 
-  @Column()
+  @Column({ select: false })
   password: string;
 
   @Column({ default: true })

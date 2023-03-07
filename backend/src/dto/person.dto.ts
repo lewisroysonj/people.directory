@@ -63,6 +63,20 @@ export class PersonUpdateDTO {
   @IsOptional()
   @IsBoolean()
   readonly isVerified: boolean;
+
+  @IsOptional()
+  @IsNumber()
+  readonly age: number;
+
+  @IsOptional()
+  @IsString()
+  readonly gender: string;
+
+  @IsOptional()
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => ContactInfoDTO)
+  readonly contactInfo: Array<ContactInfo>;
 }
 
 export class ContactInfoDTO {

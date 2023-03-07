@@ -1,14 +1,16 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import AppDataSource from 'src/config/type-orm/typeorm.config-migrations';
 import { ContactInfo, Person } from 'src/entities/person.entity';
-import { DeleteResult, Repository, UpdateResult } from 'typeorm';
+import { DeleteResult, IsNull, Not, Repository, UpdateResult } from 'typeorm';
 
 @Injectable()
 export class PersonRepository {
   constructor(
     @InjectRepository(Person)
     private personRepository: Repository<Person>,
+    @InjectRepository(ContactInfo)
+    private contactInfoRepository: Repository<ContactInfo>,
   ) {}
 
   async getAll(
@@ -41,8 +43,39 @@ export class PersonRepository {
   }
 
   async create(data: Partial<Person>): Promise<Person> {
+    const { email } = data;
+
+    const softDeletedPerson = await this.personRepository.findOne({
+      where: { email, deletedAt: Not(IsNull()) },
+      withDeleted: true,
+    });
+    if (softDeletedPerson) {
+      const queryRunner = AppDataSource.createQueryRunner();
+      await queryRunner.manager.delete(ContactInfo, {
+        person: softDeletedPerson.id,
+      });
+      await this.personRepository.delete(softDeletedPerson.id);
+    }
+
     const person = this.personRepository.create(data);
     return await this.personRepository.save(person);
+  }
+
+  async addContact(
+    data: Partial<ContactInfo>,
+    personId: number,
+  ): Promise<ContactInfo> {
+    const person = await this.personRepository.findOne({
+      where: { id: personId },
+    });
+    if (person?.id) {
+      const contact = this.contactInfoRepository.create(
+        Object.assign({}, data, { person }),
+      );
+      return await this.contactInfoRepository.save(contact);
+    } else {
+      throw new NotFoundException(`Person with ID ${personId} not found`);
+    }
   }
 
   async update(id: number, data: Partial<Person>): Promise<Person> {
@@ -52,7 +85,10 @@ export class PersonRepository {
 
   async delete(id: number): Promise<Person> {
     const deletingPerson = await this.personRepository.findOneBy({ id });
-    await this.personRepository.delete(id);
+
+    const queryRunner = AppDataSource.createQueryRunner();
+    await queryRunner.manager.softDelete(ContactInfo, { person: id });
+    await this.personRepository.softDelete(id);
     return deletingPerson;
   }
 
