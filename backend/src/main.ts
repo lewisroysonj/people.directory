@@ -21,7 +21,7 @@ async function bootstrap() {
   app.enableCors({
     origin: ["http://localhost:5000", "/\.roysonlewis\.com$/"],
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-    preflightContinue: false,
+    preflightContinue: true,
     optionsSuccessStatus: 204,
   });
 
