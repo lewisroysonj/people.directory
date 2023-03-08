@@ -15,7 +15,7 @@ env-production:
 up: env down
 	docker-compose -f docker-compose.yml up -d
 
-up-prod: env down
+up-prod: env-production down
 	docker-compose -f docker-compose.prod.yml up -d
 
 start-frontend:
