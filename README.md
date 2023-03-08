@@ -14,3 +14,5 @@
 * Run `make start-backend` to start the backend server
 * In a new terminal instance, run `make start-frontend` to start the frontend server 
 * Once all commands are ran successfully, the frontend project should be running in http://localhost:5000
+
+Visit Live Site here: http://people-directory.roysonlewis.com/
