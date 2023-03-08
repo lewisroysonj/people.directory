@@ -17,6 +17,14 @@ async function bootstrap() {
   );
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
 
+  // cors
+  app.enableCors({
+    origin: ["http://localhost:5000", "http://people-directory.roysonlewis.com"],
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    preflightContinue: false,
+    optionsSuccessStatus: 204,
+  });
+
   // db datasource
   AppDataSource.initialize()
     .then(() => {

@@ -281,7 +281,7 @@ const CreatePersonModal: React.FC<{
           const errorMessage = err.response?.data?.message;
           if (errorMessage && typeof errorMessage === 'string') {
             setErrorMessages([errorMessage]);
-          } else if (errorMessage.length > 0) {
+          } else if (errorMessage?.length > 0) {
             setErrorMessages((prev) => [...errorMessage, ...prev]);
           }
         });
