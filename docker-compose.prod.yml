@@ -15,8 +15,6 @@ services:
     container_name: portfolio_backend
     volumes:
       - ./backend:/service
-    depends_on:
-      - mysql
 
   reverse-proxy:
     build:
