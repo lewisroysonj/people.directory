@@ -1,0 +1,51 @@
+version: "3.9"
+
+services:
+  frontend:
+    build:
+      context: frontend
+    volumes:
+      - ./frontend:/service
+    depends_on:
+      - backend
+
+  backend:
+    build:
+      context: backend
+    container_name: portfolio_backend
+    volumes:
+      - ./backend:/service
+    depends_on:
+      - mysql
+
+  mysql:
+    image: mysql:8.0.27
+    restart: always
+    volumes:
+      - db-data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: rl01111998
+      MYSQL_DATABASE: database
+
+  reverse-proxy:
+    build:
+      context: nginx
+      dockerfile: dockerfile
+    restart: always
+    ports:
+      - 80:80
+    depends_on:
+      - frontend
+      - backend
+    volumes:
+      - ./nginx/configs:/etc/nginx/conf.d
+
+networks:
+  public:
+  private:
+
+volumes:
+  back-notused:
+  db-data:

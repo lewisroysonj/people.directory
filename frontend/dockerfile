@@ -1,0 +1,10 @@
+FROM node:18-alpine as production
+
+WORKDIR /service
+
+COPY package.json /service/package.json
+COPY .next /service/.next
+
+COPY . /service
+
+CMD ["yarn", "serve"]

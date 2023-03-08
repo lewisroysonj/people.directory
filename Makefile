@@ -9,6 +9,9 @@ env:
 up: env down
 	docker-compose -f docker-compose.yml up -d
 
+up-prod: env down
+	docker-compose -f docker-compose.prod.yml up
+
 start-frontend:
 	docker-compose -f docker-compose.yml exec frontend sh -c \
     	"yarn start"
@@ -46,6 +49,11 @@ ssh-backend: timeout
 
 build: down timeout
 	docker-compose -f docker-compose.yml build
+	docker-compose up -d --remove-orphans
+	make down
+
+build-prod: down timeout
+	docker-compose -f docker-compose.prod.yml build
 	docker-compose up -d --remove-orphans
 	make down
 
