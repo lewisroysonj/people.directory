@@ -4,6 +4,7 @@ services:
   frontend:
     build:
       context: frontend
+    restart: always
     volumes:
       - ./frontend:/service
     depends_on:
@@ -13,6 +14,7 @@ services:
     build:
       context: backend
     container_name: portfolio_backend
+    restart: always
     volumes:
       - ./backend:/service
 

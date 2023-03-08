@@ -17,12 +17,6 @@ async function bootstrap() {
   );
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
 
-  // cors
-  app.enableCors({
-    origin: ["http://localhost:5000", "/\.roysonlewis\.com$/"],
-    methods: '*',
-  });
-
   // db datasource
   AppDataSource.initialize()
     .then(() => {
