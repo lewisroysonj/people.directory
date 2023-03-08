@@ -6,7 +6,7 @@ import {
 } from '../lib/api/ResponseHandler';
 import { ResponseError } from './types';
 
-const MainAPIHost = 'http://localhost:8000';
+const MainAPIHost = process.env.NODE_ENV === 'production' ? "http://people-directory-api.roysonlewis.com/" : "http://localhost:8000";
 
 const MainAPIClient = axios.create({
   baseURL: MainAPIHost,
